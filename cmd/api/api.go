@@ -24,7 +24,6 @@ func NewAPIServer(addr string, db *sql.DB) *APIServer {
 }
 
 //to run the server
-
 func (s *APIServer) Run() error {
 	router := mux.NewRouter()
 	subrouter := router.PathPrefix("/api/v1").Subrouter()
