@@ -8,6 +8,7 @@ import (
 	"github.com/gorilla/mux"
 
 	"example.com/go-practicing/cmd/services/user"
+	"example.com/go-practicing/cmd/store"
 
 )
 
@@ -28,7 +29,8 @@ func (s *APIServer) Run() error {
 	router := mux.NewRouter()
 	subrouter := router.PathPrefix("/api/v1").Subrouter()
 
-	userHandler := user.NewHandler()
+	userStore:= store.NewStore(s.db)
+	userHandler := user.NewHandler(userStore)
 	userHandler.RegisterRoutes(subrouter)
 
 	log.Println("listening to:", s.addr)
