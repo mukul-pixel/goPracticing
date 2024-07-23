@@ -6,6 +6,7 @@ import (
 
 	"github.com/gorilla/mux"
 
+	"example.com/go-practicing/cmd/auth"
 	"example.com/go-practicing/cmd/types"
 	"example.com/go-practicing/cmd/utils"
 
@@ -43,14 +44,17 @@ func (h *Handler) handleRegister(w http.ResponseWriter, r *http.Request) {
 	}
 
 	//using bcrypt to hash password
-	
+	hashedPassword,err:= auth.HashPassword(payload.Password)
+	if err != nil {
+		utils.WriteJSON(w,http.StatusInternalServerError,err)
+	}
 
 	//if not exists - create user
 	err = h.Store.CreateUser(types.User{
 		FirstName: payload.FirstName,
 		LastName:  payload.LastName,
 		Email:     payload.Email,
-		Password:  payload.Password,
+		Password:  hashedPassword,
 	})
 	if err != nil {
 		utils.WriteError(w, http.StatusInternalServerError, err)
