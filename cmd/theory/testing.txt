@@ -1,0 +1,27 @@
+//TESTING
+
+UNIT TESTING - unit testing is the smallest and important part of software development, as here you will test the smallest things/parts of a software which includes functions/class/models/APIs.
+
+
+In golang, "*testing.T" is the struct provided by go's testing packages
+
+USE-CASES:-
+
+1.Logging information - can print the value in the terminal as console.log, for test, to mark/understand where our test have reached
+2.Reporting test failures - reporting test failure for a specific condition that has been set includes - t.Error(logs error), t.Fatal(logs & Stop execution).
+3.Controlling test execution - control which test to run basis on some conditions, t.Run(creates test), t.Skip(skips test)
+4.Marking a test as failed or skipped - mark the test result as failed
+
+
+COMMANDS:-
+
+t.Log(args ...): Logs the given arguments.
+t.Logf(format string, args ...): Logs the given formatted message.
+t.Error(args ...): Logs the given arguments and marks the test as failed.
+t.Errorf(format string, args ...): Logs the given formatted message and marks the test as failed.
+t.Fail(): Marks the test as failed.
+t.FailNow(): Marks the test as failed and stops execution.
+t.Fatal(args ...): Logs the given arguments, marks the test as failed, and stops execution.
+t.Fatalf(format string, args ...): Logs the given formatted message, marks the test as failed, and stops execution.
+t.Skip(args ...): Logs the given arguments and skips the test.
+t.Skipf(format string, args ...): Logs the given formatted message and skips the test.

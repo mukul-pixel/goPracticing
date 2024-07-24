@@ -34,6 +34,7 @@ func (h *Handler) handleRegister(w http.ResponseWriter, r *http.Request) {
 	var payload types.RegisterPayLoad
 	if err := utils.ParseJSON(r, &payload); err != nil {
 		utils.WriteError(w, http.StatusBadRequest, err) //i would be checking,if my body is null or not and decode the req.body for every req, therefore we'll create reusable functions in utils
+        return	 
 	}
 
 	//checking if user already exists
