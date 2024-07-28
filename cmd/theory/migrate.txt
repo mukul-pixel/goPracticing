@@ -1,0 +1,33 @@
+//MIGRATE
+
+migrate - this is a tool in golang that is used to update the database by creating 2 files up and down 
+
+up - this is used to create changes in the database (by creating tables)
+down - to revert the changes created by up. 
+
+commands to run the following 
+
+# Create a new migration / to create up and down files
+migrate create -ext sql -dir cmd/migrate/migrations users
+
+# Apply the migration / contains query to create table if not exists
+migrate -path cmd/migrate/migrations -database mysql://root:password@tcp(127.0.0.1:3306)/gopracticing up
+
+# Revert the migration / contains query to drop the table
+migrate -path cmd/migrate/migrations -database mysql://root:password@tcp(127.0.0.1:3306)/gopracticing down
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

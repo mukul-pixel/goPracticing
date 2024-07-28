@@ -14,20 +14,16 @@ import (
 )
 
 type Handler struct {
-	Store types.UserStore
+	store types.UserStore
 }
 
-func NewHandler(Store types.UserStore) *Handler {
-	return &Handler{Store: Store}
+func NewHandler(store types.UserStore) *Handler {
+	return &Handler{store: store}
 }
 
 func (h *Handler) RegisterRoutes(router *mux.Router) {
 	router.HandleFunc("/login", h.handleLogin).Methods("POST")
 	router.HandleFunc("/register", h.handleRegister).Methods("POST")
-	router.HandleFunc("/health", func(w http.ResponseWriter, r *http.Request) {
-		w.WriteHeader(http.StatusOK)
-		w.Write([]byte("OK"))
-	}).Methods("GET")
 }
 
 func (h *Handler) handleLogin(w http.ResponseWriter, r *http.Request) {
@@ -35,42 +31,41 @@ func (h *Handler) handleLogin(w http.ResponseWriter, r *http.Request) {
 }
 
 func (h *Handler) handleRegister(w http.ResponseWriter, r *http.Request) {
-	//parsing JSON Payload
-	var payload types.RegisterPayLoad
-	if err := utils.ParseJSON(r, &payload); err != nil {
-		utils.WriteError(w, http.StatusBadRequest, err) //i would be checking,if my body is null or not and decode the req.body for every req, therefore we'll create reusable functions in utils
+	var user types.RegisterPayLoad
+	if err := utils.ParseJSON(r, &user); err != nil {
+		utils.WriteError(w, http.StatusBadRequest, err)
 		return
 	}
 
-	//validate the payload/email
-	if err := utils.Validator.Struct(payload); err != nil {
+	if err := utils.Validator.Struct(user); err != nil {
 		errors := err.(validator.ValidationErrors)
-		utils.WriteError(w,http.StatusBadRequest, fmt.Errorf("validation errors %v",errors))
+		utils.WriteError(w, http.StatusBadRequest, fmt.Errorf("invalid payload: %v", errors))
 		return
 	}
 
-	//checking if user already exists
-	_, err := h.Store.GetUserByEmail(payload.Email)
+	// check if user exists
+	_, err := h.store.GetUserByEmail(user.Email)
 	if err == nil {
-		utils.WriteError(w, http.StatusBadRequest, fmt.Errorf("user with email:%s already exists", payload.Email))
+		utils.WriteError(w, http.StatusBadRequest, fmt.Errorf("user with email %s already exists", user.Email))
 		return
 	}
 
-	//using bcrypt to hash password
-	hashedPassword, err := auth.HashPassword(payload.Password)
+	// hash password
+	hashedPassword, err := auth.HashPassword(user.Password)
 	if err != nil {
-		utils.WriteJSON(w, http.StatusInternalServerError, err)
+		utils.WriteError(w, http.StatusInternalServerError, err)
+		return
 	}
 
-	//if not exists - create user
-	err = h.Store.CreateUser(types.User{
-		FirstName: payload.FirstName,
-		LastName:  payload.LastName,
-		Email:     payload.Email,
+	err = h.store.CreateUser(types.User{
+		FirstName: user.FirstName,
+		LastName:  user.LastName,
+		Email:     user.Email,
 		Password:  hashedPassword,
 	})
 	if err != nil {
 		utils.WriteError(w, http.StatusInternalServerError, err)
+		return
 	}
 
 	utils.WriteJSON(w, http.StatusCreated, nil)

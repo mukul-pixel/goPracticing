@@ -1,11 +1,10 @@
-package config
+package configs
 
 import (
 	"fmt"
 	"os"
 
 	"github.com/joho/godotenv"
-
 )
 
 type Config struct {
@@ -17,10 +16,9 @@ type Config struct {
 	DBName     string
 }
 
-var Envs = initStorage()
+var Envs = initConfig()
 
-func initStorage() Config {
-
+func initConfig() Config {
 	godotenv.Load()
 
 	return Config{
@@ -33,10 +31,11 @@ func initStorage() Config {
 	}
 }
 
+// Gets the env by key or fallbacks
 func getEnv(key, fallback string) string {
 	if value, ok := os.LookupEnv(key); ok {
 		return value
 	}
 
-	return fallback;
+	return fallback
 }

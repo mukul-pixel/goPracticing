@@ -8,7 +8,6 @@ import (
 	"github.com/gorilla/mux"
 
 	"example.com/go-practicing/cmd/services/user"
-	"example.com/go-practicing/cmd/store"
 
 )
 
@@ -24,16 +23,15 @@ func NewAPIServer(addr string, db *sql.DB) *APIServer {
 	}
 }
 
-//to run the server
 func (s *APIServer) Run() error {
 	router := mux.NewRouter()
 	subrouter := router.PathPrefix("/api/v1").Subrouter()
 
-	userStore:= store.NewStore(s.db)
+	userStore := user.NewStore(s.db)
 	userHandler := user.NewHandler(userStore)
 	userHandler.RegisterRoutes(subrouter)
 
-	log.Println("listening to:", s.addr)
+	log.Println("Listening on", s.addr)
 
 	return http.ListenAndServe(s.addr, router)
 }

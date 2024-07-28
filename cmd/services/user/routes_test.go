@@ -83,7 +83,7 @@ func (m *mockUserHandler) CreateUser(types.User) error {
 }
 
 // GetUSerById implements types.UserStore.
-func (m *mockUserHandler) GetUSerById(id int) (*types.User, error) {
+func (m *mockUserHandler) GetUserByID(id int) (*types.User, error) {
 	return nil, nil
 }
 
