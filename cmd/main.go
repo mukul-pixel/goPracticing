@@ -2,7 +2,6 @@ package main
 
 import (
 	"database/sql"
-	"fmt"
 	"log"
 
 	"github.com/go-sql-driver/mysql"
@@ -31,7 +30,7 @@ func main() {
 	}
 
 	initStorage(db)
-	fmt.Println("the database is this:", db)
+	// fmt.Println("the database is this:", db)
 
 	//creating and running the server
 	server := api.NewAPIServer(":8080", db)

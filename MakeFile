@@ -1,0 +1,19 @@
+# Define the migration tool command
+MIGRATE_CMD = migrate
+
+# Define directories and files
+MIGRATION_DIR = cmd/migrate/migrations
+
+# Define targets
+all: migrate-up
+
+migration:
+	@$(MIGRATE_CMD) create -ext sql -dir $(MIGRATION_DIR) $(filter-out $@, $(MAKECMDGOALS))
+
+migrate-up:
+	@go run cmd/migrate/migrations/main.go up
+
+migrate-down:
+	@go run cmd/migrate/migrations/main.go down
+
+.PHONY: all migration migrate-up migrate-down

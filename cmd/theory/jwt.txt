@@ -1,0 +1,16 @@
+//JWT(JSON WEB TOKEN)
+
+//jwt - it is string/token that is created/generated for creating a session of the user on the website
+
+// it is used for authentication and authorisation
+
+//AUTHENTICATION - giving access to things/services
+//AUTHORISATION - depending on the role of the user giving authentication to services
+
+//JWT - it is a combination of secret key,expiration time, and payload
+
+secret key - it is used to generate token (it should be kept safe/protected)
+payload - data of the user 
+expiration - time limit till the access to website/services
+
+
