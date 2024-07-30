@@ -27,3 +27,5 @@ func CreateJWT(secret []byte, userId int) (string, error) {
 	return tokenString, nil
 
 }
+
+func JWTAuth

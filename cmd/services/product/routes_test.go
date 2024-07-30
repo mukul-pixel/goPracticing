@@ -78,9 +78,14 @@ func TestProductServiceHandler(t *testing.T) {
 
 type mockProductHandler struct{}
 
+// UpdateProduct implements types.ProductStore.
+func (m *mockProductHandler) UpdateProduct(types.Product) error {
+	return nil
+}
+
 // GetProductByIds implements types.ProductStore.
 func (m *mockProductHandler) GetProductByIds(ps []int) ([]types.Product, error) {
-    return nil,nil
+	return nil, nil
 }
 
 // CreateProduct implements types.ProductStore.

@@ -21,12 +21,14 @@ type ProductStore interface {
 	GetProductByName(name string) (*Product, error)
 	CreateProduct(Product) error
 	GetProductByIds(ps []int) ([]Product,error)
+	UpdateProduct(Product) error
 }
 
 type CartItem struct {
 	ProductID int `json:"productId"`
 	Quantity int `json:"quantity"`
 }
+
 type CartCheckoutPayload struct {
 	Items []CartItem `json:"items" validate:"required"`
 }

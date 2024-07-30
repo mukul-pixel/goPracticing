@@ -15,8 +15,8 @@ func NewStore(db *sql.DB) *Store{
 	return &Store{db: db}
 }
 
-func (s *Store) CreateOrder(order types.Order)(int,error){
-	res,err:= s.db.Query("INSERT INTO orders(userId,total,status,address) VALUES(?,?,?,?)",order.UserID,order.Total,order.Status,order.Address)
+func (s *Store) CreateOrder(order types.Order)(int64,error){
+	res,err:= s.db.Exec("INSERT INTO orders(userId,total,status,address) VALUES(?,?,?,?)",order.UserID,order.Total,order.Status,order.Address)
 	if err != nil {
 		return 0,err
 	}

@@ -7,6 +7,7 @@ import (
 	"github.com/go-playground/validator/v10"
 	"github.com/gorilla/mux"
 
+	// "example.com/go-practicing/cmd/services/order"
 	"example.com/go-practicing/cmd/types"
 	"example.com/go-practicing/cmd/utils"
 
@@ -26,6 +27,7 @@ func (h *Handler) RegisterRoutes(router *mux.Router) {
 }
 
 func (h *Handler) HandleCheckout(w http.ResponseWriter, r *http.Request) {
+	userId := 1
 	var cart types.CartCheckoutPayload
 	if err := utils.ParseJSON(r, &cart); err != nil {
 		utils.WriteError(w, http.StatusBadRequest, err)
@@ -44,7 +46,21 @@ func (h *Handler) HandleCheckout(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	//checking if the product is available in the stock and exists
+	products,err := h.productStore.GetProductByIds(productIds)
+	if err != nil {
+		utils.WriteError(w,http.StatusBadRequest,err)
+		return
+	}
 
-	//need to implement this- will do tomorrow ! 
+	//checking if the product is available in the stock and exists
+	orderId,total,err := h.createOrder(products,cart.Items,userId) 
+	if err != nil {
+		utils.WriteError(w,http.StatusBadRequest,err)
+		return
+	}
+
+	utils.WriteJSON(w,http.StatusOK, map[string]any {
+		"orderId" : orderId,
+		"total" : total,
+	})
 }
