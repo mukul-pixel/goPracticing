@@ -1,0 +1,15 @@
+//Context
+r.Context() is a method available on http.Request in the Go net/http package. It returns a context.Context instance that carries deadlines, cancelation signals, and other request-scoped values across API boundaries and between processes.
+
+
+Define a Key Type:
+A custom type key is defined to avoid collisions with other context values.
+
+Create a New Context:
+ctx := context.WithValue(r.Context(), userKey, "John Doe") creates a new context with the user value.
+
+Pass the New Context:
+r = r.WithContext(ctx) associates the new context with the request.
+
+Retrieve the Value:
+In the handler, the value is retrieved from the context using r.Context().Value(userKey).

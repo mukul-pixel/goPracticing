@@ -6,6 +6,7 @@ import (
 	"strings"
 
 	"example.com/go-practicing/cmd/types"
+
 )
 
 type Store struct {
@@ -99,7 +100,7 @@ func (s *Store) GetProductByIds(ps []int) ([]types.Product, error) {
 
 func (s *Store) UpdateProduct(product types.Product) error {
 	//here to update the sql/db i'll use UPDATE keyword
-	_, err := s.db.Exec("UPDATE products SET name=?,price=?,image=?,description=?,quantity=? WHERE id=?", product.Name, product.Description, product.Image, product.Price, product.Quantity, product.ID)
+	_, err := s.db.Exec("UPDATE products SET name=?,price=?,image=?,description=?,quantity=? WHERE id=?", product.Name,  product.Price, product.Image,product.Description, product.Quantity, product.ID)
 	if err != nil {
 		return err
 	}

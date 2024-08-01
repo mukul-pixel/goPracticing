@@ -7,6 +7,8 @@ import (
 
 	"github.com/gorilla/mux"
 
+	"example.com/go-practicing/cmd/services/cart"
+	"example.com/go-practicing/cmd/services/order"
 	"example.com/go-practicing/cmd/services/product"
 	"example.com/go-practicing/cmd/services/user"
 
@@ -33,8 +35,13 @@ func (s *APIServer) Run() error {
 	userHandler.RegisterRoutes(subrouter)
 
 	productStore := product.NewStore(s.db)
-	productHandler :=product.NewHandler(productStore)
+	productHandler := product.NewHandler(productStore)
 	productHandler.RegisterRoutes(subrouter)
+
+	orderStore := order.NewStore(s.db)
+
+	cartHandler := cart.NewHandler(orderStore,productStore,userStore)
+	cartHandler.RegisterRoutes(subrouter)
 
 	log.Println("Listening on", s.addr)
 

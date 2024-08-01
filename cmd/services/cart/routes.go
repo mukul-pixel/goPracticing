@@ -8,6 +8,7 @@ import (
 	"github.com/gorilla/mux"
 
 	// "example.com/go-practicing/cmd/services/order"
+	"example.com/go-practicing/cmd/auth"
 	"example.com/go-practicing/cmd/types"
 	"example.com/go-practicing/cmd/utils"
 
@@ -16,18 +17,20 @@ import (
 type Handler struct {
 	orderStore   types.OrderStore
 	productStore types.ProductStore
+	userStore types.UserStore
 }
 
-func NewHandler(orderStore types.OrderStore, productStore types.ProductStore) *Handler {
-	return &Handler{orderStore: orderStore, productStore: productStore}
+func NewHandler(orderStore types.OrderStore, productStore types.ProductStore, userStore types.UserStore) *Handler {
+	return &Handler{orderStore: orderStore, productStore: productStore,userStore: userStore}
 }
 
 func (h *Handler) RegisterRoutes(router *mux.Router) {
-	router.HandleFunc("/cart/checkout", h.HandleCheckout).Methods(http.MethodGet)
+	router.HandleFunc("/cart/checkout",auth.WithJWTAuth(h.HandleCheckout,h.userStore)).Methods(http.MethodGet)
 }
 
 func (h *Handler) HandleCheckout(w http.ResponseWriter, r *http.Request) {
-	userId := 1
+	userId := auth.GetUserIDFromContext(r.Context())
+
 	var cart types.CartCheckoutPayload
 	if err := utils.ParseJSON(r, &cart); err != nil {
 		utils.WriteError(w, http.StatusBadRequest, err)

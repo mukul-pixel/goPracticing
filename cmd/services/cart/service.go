@@ -42,7 +42,9 @@ func (h *Handler) createOrder(products []types.Product, cartItems []types.CartIt
 		product.Quantity -= item.Quantity
 
 		//update the db
-		h.productStore.UpdateProduct(product)
+		if err:=h.productStore.UpdateProduct(product);err!=nil{
+			return 0,0,nil
+		}
 	}
 	//create the order
 	orderId, err := h.orderStore.CreateOrder(types.Order{
@@ -55,17 +57,18 @@ func (h *Handler) createOrder(products []types.Product, cartItems []types.CartIt
 		return 0,0,err
 	}
 
-	//create order items
-	for _,item := range cartItems {
+	// create order the items records
+	for _, item := range cartItems {
 		h.orderStore.CreateOrderItem(types.OrderItem{
-			OrderID: orderId,
+			OrderID:   orderId,
 			ProductID: item.ProductID,
-			Quantity: item.Quantity,
-			Price: productMap[item.ProductID].Price,
+			Quantity:  item.Quantity,
+			Price:     productMap[item.ProductID].Price,
 		})
 	}
 
-	return orderId, total, nil
+
+	return int(orderId), total, nil
 }
 
 func checkIfCartIsInStock(cartItems []types.CartItem, productMap map[int]types.Product) error {
